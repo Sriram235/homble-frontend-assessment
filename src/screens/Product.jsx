@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { getRequest,postRequest } from "../axios";
+// import { getRequest } from "../axios";
+import useGet from '../hooks/useGet';
 
 function Product() {
     const params = useParams();
@@ -9,16 +10,17 @@ function Product() {
     const [showDescription, setshowDescription] = useState(false);
     const [showAllenergen, setshowAllenergen] = useState(false);
     const [showUsage, setshowUsage] = useState(false);
+    const [Error, setError] = useState(null);
     
+    const { data, loading, error } = useGet(`/products/${params.id}`)
     useEffect(() => {
-        getRequest(`/products/${params.id}`).then(res => {
-            setisloading(false);
-            setproductData(res.data)
-            console.log(res.data)
-        })
-    }, [])
+        setisloading(loading);
+        setError(error);
+        setproductData(data);
+    }, [loading,error,data])
 
-    if(isloading) return <h1>Loading...</h1>
+    if(isloading) return <h1>Loading...</h1>;
+    if(Error) return <h1>{Error}</h1>;
     
     return (
         <>

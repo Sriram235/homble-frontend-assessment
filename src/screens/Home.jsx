@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { getRequest,postRequest } from "../axios";
+import { postRequest } from "../axios";
 import { useEffect } from "react";
+import useGet from "../hooks/useGet";
 
 const Home = () => {
   const [isloading, setisloading] = useState(true);
   const [products, setproducts] = useState([]);
   const [display, setdisplay] = useState(false);
+  const [Error, setError] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,14 +19,17 @@ const Home = () => {
     setdisplay(!display)
   }
 
+  const { data, loading, error } = useGet(`/products`)
   useEffect(() => {
-    getRequest("products").then(res => {
-      setproducts(res.data.sort((a,b) => a.selling_price - b.selling_price))
-      setisloading(false);
-      console.log(res.data)
-    })
-  }, [])
-  
+    if (data) {
+      const sortedProducts = [...data].sort((a, b) => a.selling_price - b.selling_price);
+      setproducts(sortedProducts);
+    }
+    setError(error);
+    setisloading(loading);
+  }, [loading,error,data]);
+
+  if(Error) return <h1>{Error}</h1>;
   return (
     <>
     <div className="addProduct">
