@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-// import { getRequest } from "../axios";
+import '../styles/product.css';
 import useGet from '../hooks/useGet';
+// import { getRequest } from "../axios";
 
 function Product() {
     const params = useParams();
@@ -19,22 +20,46 @@ function Product() {
         setproductData(data);
     }, [loading,error,data])
 
-    if(isloading) return <h1>Loading...</h1>;
-    if(Error) return <h1>{Error}</h1>;
+    if(isloading) return <h1 className='loading'>Loading...</h1>;
+    if(Error) return <h1 className='loading'>{Error}</h1>;
     
     return (
         <>
-        <img src={productData.productImage} alt={productData.name} />
-        <p>Product Name : {productData.name}</p>
-        <p>Price : {productData.selling_price}</p>
-        <p>Description <button onClick={() => setshowDescription(!showDescription)}>{showDescription?"hide":"show"}</button></p>
-        {showDescription && productData.description}
-
-        <p>Allergens <button onClick={() => setshowAllenergen(!showAllenergen)}>{showAllenergen?"hide":"show"}</button></p>
-        {showAllenergen && productData.allergen_info}
-
-        <p>Usage Instructions  <button onClick={() => setshowUsage(!showUsage)}>{showUsage?"hide":"show"}</button></p>
-        {showUsage && productData.cooking_instruction}
+        <a href="/" className='backlink'>Back</a>
+        <div className="container">
+            <img src={productData.productImage} alt={productData.name} />
+            <table>
+                <tr>
+                    <td className='label'>Product Name</td>
+                    <td >{productData.name}</td>
+                </tr>
+                <tr>
+                    <td className='label'>Price</td>
+                    <td>{productData.selling_price}</td>
+                </tr>
+                <tr>
+                    <td className='label'>Description</td>
+                    <td>
+                        <button onClick={() => setshowDescription(!showDescription)}>{showDescription?"hide":"show"}</button>
+                        <p>{showDescription && productData.description}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td className='label'>Allergens</td>
+                    <td>
+                        <button onClick={() => setshowAllenergen(!showAllenergen)}>{showAllenergen?"hide":"show"}</button>
+                        <p>{showAllenergen && productData.allergen_info}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td className='label'>Usage Instructions</td>
+                    <td>
+                        <button onClick={() => setshowUsage(!showUsage)}>{showUsage?"hide":"show"}</button>
+                        <p>{showUsage && productData.cooking_instruction}</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
         </>
     )
 }
